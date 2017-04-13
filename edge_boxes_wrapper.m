@@ -7,11 +7,11 @@ model.opts.multiscale=0; model.opts.sharpen=2; model.opts.nThreads=4;
 
 %% set up opts for edgeBoxes (see edgeBoxes.m)
 opts = edgeBoxes;
-opts.alpha = 0.6;%.65;     % step size of sliding window search
-opts.beta  = 0.7;%.75;     % nms threshold for object proposals
+opts.alpha = 0.65;   % step size of sliding window search
+opts.beta  = 0.75;   % nms threshold for object proposals
 opts.minScore = .01;  % min score of boxes to detect
 opts.maxBoxes = 1e4;  % max number of boxes to detect
-
+disp('here')
 %% process all images and detect Edge Box bounding box proposals (see edgeBoxes.m)
 all_boxes = {};
 for i=1:length(image_filenames)

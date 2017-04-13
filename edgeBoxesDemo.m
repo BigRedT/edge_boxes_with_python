@@ -7,13 +7,24 @@ model.opts.multiscale=0; model.opts.sharpen=2; model.opts.nThreads=4;
 %% set up opts for edgeBoxes (see edgeBoxes.m)
 opts = edgeBoxes;
 opts.alpha = .65;     % step size of sliding window search
-opts.beta  = .75;     % nms threshold for object proposals
+opts.beta  = .2;     % nms threshold for object proposals
 opts.minScore = .01;  % min score of boxes to detect
-opts.maxBoxes = 1e4;  % max number of boxes to detect
+opts.maxBoxes = 1e2;  % max number of boxes to detect
+% opts.edgeMinMag = 0.1;
+% opts.edgeMergeThr = 0.5;
+% opts.clusterMinMag = 0.5;
 
 %% detect Edge Box bounding box proposals (see edgeBoxes.m)
-I = imread('peppers.png');
+I = imread('street.jpg');
 tic, bbs=edgeBoxes(I,model,opts); toc
+
+%%
+figure; imshow(I); hold on;
+for i=1:10
+    rectangle('Position',bbs(i,1:4), ...
+        'LineWidth',2);
+end
+hold off;
 
 %% show evaluation results (using pre-defined or interactive boxes)
 gt=[122 248 92 65; 193 82 71 53; 410 237 101 81; 204 160 114 95; ...
@@ -21,7 +32,7 @@ gt=[122 248 92 65; 193 82 71 53; 410 237 101 81; 204 160 114 95; ...
 if(0), gt='Please select an object box.'; disp(gt); figure(1); imshow(I);
   title(gt); [~,gt]=imRectRot('rotate',0); gt=gt.getPos(); end
 gt(:,5)=0; [gtRes,dtRes]=bbGt('evalRes',gt,double(bbs),.7);
-figure(1); bbGt('showRes',I,gtRes,dtRes(dtRes(:,6)==1,:));
+figure(1);bbGt('showRes',I,gtRes,dtRes(dtRes(:,6)==1,:));
 title('green=matched gt  red=missed gt  dashed-green=matched detect');
 
 %% run and evaluate on entire dataset (see boxesData.m and boxesEval.m)
